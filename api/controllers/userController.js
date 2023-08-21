@@ -7,6 +7,9 @@ var mongoose = require('mongoose'),
     RequestResult = mongoose.model('RequestResult'),
     Test = mongoose.model('Test');
 
+const Response = require("../lib/Response");
+const CustomError = require("../lib/Error");
+const Enum = require("../models/enums");
 
 const { response } = require('express');
 const Utilities = require('../middlewares/utilites');
@@ -119,7 +122,7 @@ exports.getUsers = async function (req, res) {
 
         Utilities.clearPrimeNGFilters(parameters.filters);
 
-        
+
         console.log("cleared params: " + JSON.stringify(parameters))
 
         var query = [];
@@ -229,19 +232,24 @@ exports.saveUser = async function (req, res) {
         var query = { _id: newUser._id },
             update = { expire: new Date() },
             options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
         User.findByIdAndUpdate(newUser._id, newUser, { upsert: true, new: true, setDefaultsOnInsert: true }, async function (err, savedUser) {
             if (err) {
                 console.log(err);
-                res.status(500).send(err);
+                // res.status(500).send(err);
+                res.status(Enum.HTTP_CODES.INT_SERVER_ERROR).json(Response.successResponse(req.body, Enum.HTTP_CODES.INT_SERVER_ERROR));
             } else {
                 result.code = 1;
                 result.data = savedUser;
-                res.status(200).send(result);
+                res.status(Enum.HTTP_CODES.CREATED).json(Response.successResponse({ success: true }, Enum.HTTP_CODES.CREATED));
+                // res.status(200).send(result);
             }
         });
 
     } catch (error) {
         console.log(error);
-        res.status(500).send(error.stack);
+        // res.status(500).send(error.stack);
+        let errorResponse = Response.errorResponse(err);
+        res.status(errorResponse.code).json(errorResponse);
     }
 };
