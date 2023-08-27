@@ -6,6 +6,6 @@ module.exports = function (app) {
     var commonController = require('../controllers/commonController');
 
     app.route('/public/test')
-        .get(commonController.getTest);
+        .post(commonController.getTest);
 
 };

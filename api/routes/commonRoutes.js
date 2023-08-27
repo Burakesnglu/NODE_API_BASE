@@ -6,15 +6,15 @@ module.exports = function (app) {
     var commonController = require('../controllers/commonController');
 
     app.route('/v1/getCities')
-        .get(commonController.getCities);
+        .post(commonController.getCities);
 
     app.route('/v1/getCountries')
-        .get(commonController.getCountries); 
+        .post(commonController.getCountries); 
 
     app.route('/v1/getParameters')
-        .get(commonController.getParameters);
+        .post(commonController.getParameters);
   
     app.route('/v1/getTowns')
-        .get(commonController.getTowns); 
+        .post(commonController.getTowns); 
 
 };
