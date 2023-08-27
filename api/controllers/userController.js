@@ -27,7 +27,7 @@ exports.login = function (req, res) {
         var parameters = req.body;
 
         var request = {
-            signature: parameters.signature,
+            password: parameters.password,
             username: parameters.username
         };
 
@@ -49,18 +49,18 @@ exports.login = function (req, res) {
 
 
                     var password = Utilities.decrypt(user.password);
-                    //console.log("pass: " + password);
+                    console.log("pass: " + password);
 
-                    var s = user.username + "@@" + password;
+                    // var s = user.username + "@@" + password;
                     //console.log(s);
-                    var signature = md5(s);
+                    // var signature = md5(s);
                     //var signature = md5("test@ast.com" + "@@" + "test");
 
                     //console.log("signature: " + signature);
                     //console.log("request.signature: " + request.signature);
 
 
-                    if (request.signature == signature) {
+                    if (request.password == password) {
                         const payLoad = { user: user };
 
                         const tokenString = jwt.sign(payLoad, config.api_secret_key, { expiresIn: "12h" });
